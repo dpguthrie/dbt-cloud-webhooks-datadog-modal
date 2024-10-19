@@ -1,0 +1,39 @@
+name: Deploy Modal App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
+      MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - uses: yezz123/setup-uv@v4
+      - name: Install modal
+        run: |
+          uv pip install modal
+        env:
+          UV_SYSTEM_PYTHON: 1
+
+      - name: Create .env file
+        run: |
+          echo "DD_SITE=${{ secrets.DD_SITE }}" >> .env
+          echo "DD_API_KEY=${{ secrets.DD_API_KEY }}" >> .env
+          echo "DBT_CLOUD_SERVICE_TOKEN=${{ secrets.DBT_CLOUD_SERVICE_TOKEN }}" >> .env
+          echo "DBT_CLOUD_METADATA_URL=${{ secrets.DBT_CLOUD_METADATA_URL }}" >> .env
+          echo "DBT_CLOUD_WEBHOOK_SECRET=${{ secrets.DBT_CLOUD_WEBHOOK_SECRET }}" >> .env
+
+      - name: Deploy Modal app
+        run: modal deploy src/app.py

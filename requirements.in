@@ -1,0 +1,4 @@
+modal~=0.64
+datadog-api-client
+requests
+python-dotenv
