@@ -51,7 +51,7 @@ This integration allows you to monitor your dbt Cloud jobs by sending logs to Da
 6. Deploy your Modal endpoint. You can deploy locally using the command below:
 
    ```
-   modal deply src/app.py
+   modal deploy src/app.py
    ```
 
    Once deployed, update your webhook's endpoint created in step 5 with the url of your application.
